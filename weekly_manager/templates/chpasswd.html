@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+    <title>智联管理系统</title>
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/ligh-broadside.css" rel="stylesheet">
+    <link href="http://v3.bootcss.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="static/bootstrap/css/jquery-ui.css">
+    <style type="text/css">
+        .select{
+            width: 15%;
+            height: 34px;
+            display: inline;
+        }
+        .input{
+            width: 30%;
+            height: 34px;
+            display: inline;
+        }
+        .text_area {
+            width: 30%;
+            height: 500px;
+        }
+        .td {
+            border-top: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">外网运维管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/chpasswd">更改密码</a></li>
+            <li><a href="/logout">退出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <br>
+   <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="width:280px" >
+        <!--<ul class="nav nav-list"> -->
+        <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+          <li class="active">
+              <a href="/index"><i class="glyphicon glyphicon-th-large"></i>外网运维管理系统</a>
+          </li>
+          <li><a href="#weekSetting" class="nav-header collapsed" data-toggle="collapse">
+              <i class="glyphicon glyphicon-cog"></i>周报管理
+              <span class="pull-right glyphicon glyphicon-chevron-down"></span></a>
+              <ul id="weekSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                  <li><a href="/weekly_report_add" class="glyphicon glyphicon-fire">周报提交</a></li>
+                  <li><a href="/report_details" class="glyphicon glyphicon-unchecked">周报查询</a></li>
+              </ul>
+          </li>
+        </ul> 
+      </div>
+
+    <div class='col-md-8'>
+      <h2>修改密码</h2>
+           <div class="col-sm-9 col-sm-offset-3 col-md-12 col-md-offset-1 main">
+            <div class="table-responsive">
+                <tr >
+                      <label><br>新的密码<br></label>
+                      <br>
+                      <input  class="form-control input " type="password" placeholder="输入密码" id="pass_name"  name="pass_name"/>
+                      <br>
+                </tr>
+                <tr >
+                      <label><br>重复密码<br></label>
+                      <br>
+                      <input class="form-control input " type="password" placeholder="重复输入" id="repet_pass" name="repet_pass" />
+                      <br>
+                </tr>
+                <br>
+                <tr class="td">
+                    <td>
+                      <div class="box-footer select">
+                         <button type="button" class="btn btn-primary" onclick="addData()">更改</button>
+                      </div>
+                      <br>
+                      <br>
+                    </td>
+                </tr>
+            </div>
+    </div>
+  <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="static/bootstrap/js/bootstrap.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+<!--<script type="text/JavaScript" src="./jquery.js"></script>
+</head><body>-->
+  <script type="text/javascript">
+      function addData() {
+          var pass_name  = $("#pass_name").val()
+          var repet_pass  = $("#repet_pass").val()
+          if ( pass_name != repet_pass ){
+              alert("密码不一致!!!");
+          }
+          else if ( pass_name == "" ){
+              alert("密码不能为空!!!");
+          }
+          else {
+              alert("密码修改中!!!");
+              $.ajax({
+                  url: "/changepwd",
+                  type: "POST",
+                  timeout : 600000,
+                  dataType: "json",
+                  data: {
+                      "pass_name": pass_name,
+                  },
+                  success: function (data){
+                      console.log(data)
+                      if (data == 0) {
+                           alert("修改成功");
+                      }      
+                  },
+                  error: function(data){
+                      console.log(data)
+                      if (data != 0) {
+                           alert("修改失败");
+                      }
+                  },
+                  })
+               }
+          }
+  </script>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+    <title>智联管理系统</title>
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/ligh-broadside.css" rel="stylesheet">
+    <link href="http://v3.bootcss.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="static/bootstrap/css/jquery-ui.css">
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap-datetimepicker.min.css" media="screen"/>
+
+    <style type="text/css">
+        .select{
+            width: 15%;
+            height: 34px;
+            display: inline;
+        }
+        .input{
+            width: 30%;
+            height: 34px;
+            display: inline;
+        }
+        .text_area {
+            width: 30%;
+            height: 500px;
+        }
+        .td {
+            border-top: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">外网运维管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/chpasswd">更改密码</a></li>
+            <li><a href="/logout">退出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <br>
+   <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="width:280px" >
+        <!--<ul class="nav nav-list"> -->
+        <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+          <li class="active">
+              <a href="/index"><i class="glyphicon glyphicon-th-large"></i>外网运维管理系统</a>
+          </li>
+          <li><a href="#weekSetting" class="nav-header collapsed" data-toggle="collapse">
+              <i class="glyphicon glyphicon-cog"></i>周报管理
+              <span class="pull-right glyphicon glyphicon-chevron-down"></span></a>
+              <ul id="weekSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                  <li><a href="/weekly_report_add" class="glyphicon glyphicon-fire">周报提交</a></li>
+                  <li><a href="/report_details" class="glyphicon glyphicon-unchecked">周报查询</a></li>
+              </ul>
+          </li>
+        </ul> 
+      </div>
+
+   <div class='col-md-9'>
+      <h2>周报管理</h2>
+           <div class="col-sm-9 col-sm-offset-3 col-md-12 col-md-offset-1 main">
+            <div class="table-responsive">
+                <tr>
+                      <br>
+                    <td >
+                      <label>开始时间</label>
+                      <br>
+                          <input style="width:800px" class="form-control input" type="text"  id="start_time" >
+                    </td>
+                      <br>
+                </tr>
+                <tr>
+                      <br>
+                    <td >
+                      <label>结束时间</label>
+                      <br>
+                          <input style="width:800px" class="form-control input" type="text"  id="end_time">
+                    </td>
+                      <br>
+                      <br>
+                </tr>
+                <tr >
+                      <label><br>周报明细<br></label>
+                      <br>
+                      <textarea type="text" style="width:800px;height:200px;" onclick="ChangeContent()" placeholder="填写本周工作内容！！！" id="report_content" name="report_content" ></textarea>
+                      <br>
+                </tr>
+                <br>
+                <tr class="td">
+                    <td>
+                      <div class="box-footer select">
+                         <button type="button" class="btn btn-primary" onclick="addData()">提交</button>
+                      </div>
+                      <br>
+                      <br>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+    </div>
+    <div class='col-md-16'>
+      <h2>填表规则</h2>
+        <p>
+            看名字填写，你懂的！！！
+        </p>
+  </div>
+  <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="static/bootstrap/js/jquery-1.8.3.min.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="static/bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="static/bootstrap/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+
+</body>
+<script type="text/javascript">
+    $(function () {
+        $('#start_time').datetimepicker({
+            minView: "month",
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#end_time').datetimepicker({
+            minView: "month",
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+    });
+</script>
+           <!-- format: 'yyyy-mm-dd hh:ii',-->
+<!--<script type="text/javascript">
+     var now = new Date(); 
+     var nowTime = now.getTime() ; 
+     var day = now.getDay();
+     var oneDayLong = 24*60*60*1000 ; 
+     
+     var MondayTime = nowTime - (day-1)*oneDayLong  ; 
+     var SundayTime =  nowTime + (6-day)*oneDayLong ; 
+     var monday = new Date(MondayTime);
+     var start_time = monday.getFullYear()+"-"+(monday.getMonth()+1)+"-"+monday.getDate();
+     var sunday = new Date(SundayTime);
+     var end_time = sunday.getFullYear()+"-"+(sunday.getMonth()+1)+"-"+sunday.getDate();
+ 
+     document.getElementById("end_time").value=end_time;
+     document.getElementById("start_time").value=start_time;
+
+</script>-->
+<script type="text/javascript">
+    var time = new Date(), msg = [];
+  
+    if ( time.getDay() == 0 ){
+        time.setDate(time.getDate() - 7 + 1);
+    }
+    else {
+        time.setDate(time.getDate() - time.getDay() + 1);
+    }
+    var monday_month = time.getMonth()+1;
+    if ( monday_month < 10 ){
+        var monday_month = ("0" + monday_month);
+    }
+    var monday_date = time.getDate();
+    if ( monday_date < 10 ){
+        var monday_date = ("0" + monday_date);
+    }
+    var monyday_time = (time.getFullYear() + '-' + monday_month + '-' + monday_date)
+    document.getElementById("start_time").value=monyday_time;
+  
+    time.setDate(time.getDate() + 4);
+    var friday_month = time.getMonth()+1;
+    if ( friday_month < 10 ){
+        var friday_month = ("0" + friday_month);
+    }
+    var friday_date = time.getDate();
+    if ( friday_date < 10 ){
+        var friday_date = ("0" + friday_date);
+    }
+    var friday_time = (time.getFullYear() + '-' + friday_month + '-' + friday_date)
+    document.getElementById("end_time").value=friday_time;
+
+
+</script>
+
+<script type="text/javascript">
+    function ChangeContent(){  
+        var str_start_time = $("#start_time").val();
+        var str_end_time = $("#end_time").val();
+
+        $.ajax({
+            url: "/this_week_content",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "start_time": str_start_time,
+                "end_time": str_end_time,
+            },
+            success: function (data){
+                console.log(data)
+                document.getElementById("report_content").innerHTML = data;
+            },
+        })
+    }
+    function addData() {
+        var start_time  = $("#start_time").val()
+        var end_time  = $("#end_time").val()
+        var report_content  = $("#report_content").val()
+        if ( start_time == "" ){
+            alert("开始时间不能为空!!!");
+        }
+        else if ( end_time == "" ){
+            alert("结束时间不能为空!!!");
+        }
+        else if ( report_content == "" ){
+            alert("工作内容不能为空!!!");
+        }
+        else {
+            $.ajax({
+                url: "/report_add",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "start_time": start_time,
+                    "end_time": end_time,
+                    "report_content": report_content,
+                },
+                success: function (data){
+                    console.log(data)
+                    if (data == 0) {
+                         window.location.href = '/report_details';
+                    }      
+                },
+                error: function(data){
+                    console.log(data)
+                    if (data != 0) {
+                         alert("提交失败");
+                    }
+                },
+                })
+             }
+        }
+  </script>
+</html>
