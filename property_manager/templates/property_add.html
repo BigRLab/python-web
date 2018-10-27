@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+    <title>智联管理系统</title>
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/ligh-broadside.css" rel="stylesheet">
+    <link href="http://v3.bootcss.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="static/bootstrap/css/jquery-ui.css">
+    <style type="text/css">
+        .select{
+            width: 15%;
+            height: 34px;
+            display: inline;
+        }
+        .input{
+            width: 30%;
+            height: 34px;
+            display: inline;
+        }
+        .text_area {
+            width: 30%;
+            height: 500px;
+        }
+        .td {
+            border-top: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">外网运维管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/chpasswd">更改密码</a></li>
+            <li><a href="/logout">退出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <br>
+   <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="width:280px" >
+        <!--<ul class="nav nav-list"> -->
+        <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+          <li class="active">
+              <a href="/index"><i class="glyphicon glyphicon-th-large"></i>外网运维管理系统</a>
+          </li>
+          <li><a href="#propertySetting" class="nav-header collapsed" data-toggle="collapse">
+              <i class="glyphicon glyphicon-cog"></i>资产管理
+              <span class="pull-right glyphicon glyphicon-chevron-down"></span></a>
+              <ul id="propertySetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                  <li><a href="/property_add" class="glyphicon glyphicon-fire">资产更新</a></li>
+                  <li><a href="/property_details" class="glyphicon glyphicon-unchecked">资产查询</a></li>
+                  <li><a href="/property_operation" class="glyphicon glyphicon-unchecked">操作查询</a></li>
+              </ul>
+          </li>
+        </ul> 
+      </div>
+
+    <div class='col-md-8'>
+      <h2>资产更新</h2>
+           <div class="col-sm-9 col-sm-offset-3 col-md-12 col-md-offset-1 main">
+            <div class="table-responsive">
+                <tr class="td">
+                      <label>添加类型</label>
+                      <br>
+                      <div class="form-group ">
+                          <select class="form-control select" style="width:800px" id="project_name" onclick="return click_a()">
+                             <option value="add_list">新机添加</option>-->
+                             <option value="room_list">机房位置更新</option>
+                             <option value="domain_list">域名列表更新</option>
+                             <option value="app_list">应用列表更新</option>
+                             <option value="principal_list">负责人更新</option>
+                             <option value="system_list">系统名称更新</option>
+                             <option value="team_list">团队列表更新</option>
+                             <option value="pool_all">Pool池虚拟机全部添加(重要操作!!!只能写一个IP!!!别乱搞!!!)</option>
+                          </select>
+                       </div>
+                </tr>
+                <tr >
+                 <div id="operation_name" name="operation_name">
+                      <label><br>业务名称<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="更新的类型名称（如：机房位置就写：B28机房 ；如：项目列表就写：www.zhaopin.com ； 如：系统名称就写，centos7）" id="all_name"  name="all_name"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                      <label><br>服务器IP<br></label>
+                      <br>
+                      <textarea type="text" style="width:800px;height:80px;" placeholder="172.30.200.11" id="ip_name" name="ip_name" ></textarea>
+                      <br>
+                </tr>
+                <tr >
+                 <div id="team_name_div" name="team_name_div">
+                      <label><br>所属团队<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="OPS" id="team_name_html"  name="team_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="domain_name_div" name="domain_name_div">
+                      <label><br>项目域名<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="www.zhaopin.com" id="domain_name_html"  name="domain_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="ip_remark_div" name="ip_remark_div">
+                      <label><br>服务器备注<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="Xen虚拟机IP后面的名字" id="ip_remark_html"  name="ip_remark_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="app_name_div" name="app_name_div">
+                      <label><br>应用程序<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="tomcat" id="app_name_html"  name="app_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="system_name_div" name="system_name_div">
+                      <label><br>操作系统<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="Centos 7" id="system_name_html"  name="system_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="cpu_name_div" name="cpu_name_div">
+                      <label><br>cpu核心数<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="16" id="cpu_name_html"  name="cpu_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="memory_name_div" name="memory_name_div">
+                      <label><br>内存大小<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="4" id="memory_name_html"  name="memory_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="disk_name_div" name="disk_name_div">
+                      <label><br>硬盘大小<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="20" id="disk_name_html"  name="disk_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="model_name_div" name="model_name_div">
+                      <label><br>机器型号<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="虚拟机" id="model_name_html"  name="model_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="principal_name_div" name="principal_name_div">
+                      <label><br>负责人<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="机器负责人" id="principal_name_html"  name="principal_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="xen_name_div" name="xen_name_div">
+                      <label><br>Xen池名<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="Test pool1 Bond 0+1 <6.5> (B28)" id="xen_name_html"  name="xen_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="room_name_div" name="room_name_div">
+                      <label><br>所属机房<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="B28" id="room_name_html"  name="room_name_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                 <div id="xen_ip_div" name="xen_ip_div">
+                      <label><br>Xen的IP<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="Xen宿主机的IP地址" id="xen_ip_html"  name="xen_ip_html"/>
+                      <br>
+                 </div>
+                </tr>
+                <br>
+                <tr class="td">
+                    <td>
+                      <div class="box-footer select">
+                         <button type="button" class="btn btn-primary" onclick="addData()">添加</button>
+                      </div>
+                      <br>
+                      <br>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+    </div>
+    <div class='col-md-16'>
+      <h2>部署规则</h2>
+         <!--<ul class="nav nav-tabs nav-stacked">-->
+        <p>
+            看名字部署，你懂的！！！
+        </p>
+         <!--</ul>-->
+  </div>
+
+
+<script src="static/bootstrap/js/jquery-1.8.3.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+<script type="text/javascript">
+  document.getElementById('operation_name').style.display = "none";
+  function click_a(){
+    var deploy=document.getElementById('project_name').value;
+    if(deploy == "add_list")
+      {
+           document.getElementById('operation_name').style.display = "none";
+           document.getElementById('team_name_div').style.display = "block";
+           document.getElementById('domain_name_div').style.display = "block";
+           document.getElementById('ip_remark_div').style.display = "block";
+           document.getElementById('app_name_div').style.display = "block";
+           document.getElementById('system_name_div').style.display = "block";
+           document.getElementById('cpu_name_div').style.display = "block";
+           document.getElementById('memory_name_div').style.display = "block";
+           document.getElementById('disk_name_div').style.display = "block";
+           document.getElementById('model_name_div').style.display = "block";
+           document.getElementById('principal_name_div').style.display = "block";
+           document.getElementById('xen_name_div').style.display = "block";
+           document.getElementById('room_name_div').style.display = "block";
+           document.getElementById('xen_ip_div').style.display = "block";
+      }
+    else if(deploy == "pool_all")
+      {
+           document.getElementById('operation_name').style.display = "none";
+           document.getElementById('team_name_div').style.display = "none";
+           document.getElementById('domain_name_div').style.display = "none";
+           document.getElementById('ip_remark_div').style.display = "none";
+           document.getElementById('app_name_div').style.display = "none";
+           document.getElementById('system_name_div').style.display = "none";
+           document.getElementById('cpu_name_div').style.display = "none";
+           document.getElementById('memory_name_div').style.display = "none";
+           document.getElementById('disk_name_div').style.display = "none";
+           document.getElementById('model_name_div').style.display = "none";
+           document.getElementById('principal_name_div').style.display = "none";
+           document.getElementById('xen_name_div').style.display = "none";
+           document.getElementById('room_name_div').style.display = "none";
+           document.getElementById('xen_ip_div').style.display = "none";
+      } 
+    else
+       {
+           document.getElementById('operation_name').style.display = "block";
+           document.getElementById('team_name_div').style.display = "none";
+           document.getElementById('domain_name_div').style.display = "none";
+           document.getElementById('ip_remark_div').style.display = "none";
+           document.getElementById('app_name_div').style.display = "none";
+           document.getElementById('system_name_div').style.display = "none";
+           document.getElementById('cpu_name_div').style.display = "none";
+           document.getElementById('memory_name_div').style.display = "none";
+           document.getElementById('disk_name_div').style.display = "none";
+           document.getElementById('model_name_div').style.display = "none";
+           document.getElementById('principal_name_div').style.display = "none";
+           document.getElementById('xen_name_div').style.display = "none";
+           document.getElementById('room_name_div').style.display = "none";
+           document.getElementById('xen_ip_div').style.display = "none";
+    }
+   }
+</script>
+<!--<script type="text/JavaScript" src="./jquery.js"></script>
+</head><body>-->
+  <script type="text/javascript">
+      function addData() {
+          var ip_name  = $("#ip_name").val()
+          var all_name  = $("#all_name").val()
+          var project_name = $("#project_name").val()
+          var team_name_html = $("#team_name_html").val()
+          var domain_name_html = $("#domain_name_html").val()
+          var ip_remark_html = $("#ip_remark_html").val()
+          var app_name_html = $("#app_name_html").val()
+          var system_name_html = $("#system_name_html").val()
+          var cpu_name_html = $("#cpu_name_html").val()
+          var memory_name_html = $("#memory_name_html").val()
+          var disk_name_html = $("#disk_name_html").val()
+          var model_name_html = $("#model_name_html").val()
+          var principal_name_html = $("#principal_name_html").val()
+          var xen_name_html = $("#xen_name_html").val()
+          var room_name_html = $("#room_name_html").val()
+          var xen_ip_html = $("#xen_ip_html").val()
+          if ( ip_name == "" ){
+              alert("IP不能为空!!!");
+          }
+          else {
+              $.ajax({
+                  url: "/property_write",
+                  type: "POST",
+                  timeout: 300000,
+                  dataType: "json",
+                  data: {
+                      "ip_name": ip_name,
+                      "all_name": all_name,
+                      "project_name": project_name,
+                      "team_name_html": team_name_html,
+                      "domain_name_html": domain_name_html,
+                      "ip_remark_html": ip_remark_html,
+                      "app_name_html": app_name_html,
+                      "system_name_html": system_name_html,
+                      "cpu_name_html": cpu_name_html,
+                      "memory_name_html": memory_name_html,
+                      "disk_name_html": disk_name_html,
+                      "model_name_html": model_name_html,
+                      "principal_name_html": principal_name_html,
+                      "xen_name_html": xen_name_html,
+                      "room_name_html": room_name_html,
+                      "xen_ip_html": xen_ip_html,
+                  },
+                  success: function (data){
+                      console.log(data)
+                      if (data == 0) {
+                           alert("添加成功");
+                      }      
+                  },
+                  error: function(data){
+                      console.log(data)
+                      if (data != 0) {
+                           alert("添加失败");
+                      }
+                  },
+                  })
+               }
+          }
+  </script>
+</html>

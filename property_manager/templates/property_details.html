@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+    <title>外网运维管理系统</title>
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/ligh-broadside.css" rel="stylesheet">
+    <link href="http://v3.bootcss.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="static/bootstrap/css/jquery-ui.css">
+    <style type="text/css">
+        .select{
+            width: 15%;
+            height: 34px;
+            display: inline;
+        }
+        .input{
+            width: 30%;
+            height: 34px;
+            display: inline;
+        }
+        .text_area {
+            width: 30%;
+            height: 500px;
+        }
+        .td {
+            border-top: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <nav style="height:15px;"class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">外网运维管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/chpasswd">更改密码</a></li>
+            <li><a href="/logout">退出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="width:260px" >
+        <!--<ul class="nav nav-list"> -->
+        <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+          <li class="active">
+              <a href="/index"><i class="glyphicon glyphicon-th-large"></i>外网运维管理系统</a>
+          </li>
+          <li><a href="#propertySetting" class="nav-header collapsed" data-toggle="collapse">
+              <i class="glyphicon glyphicon-cog"></i>资产管理
+              <span class="pull-right glyphicon glyphicon-chevron-down"></span></a>
+              <ul id="propertySetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                  <li><a href="/property_add" class="glyphicon glyphicon-fire">资产更新</a></li>
+                  <li><a href="/property_details" class="glyphicon glyphicon-unchecked">资产查询</a></li>
+                  <li><a href="/property_operation" class="glyphicon glyphicon-unchecked">操作查询</a></li>
+              </ul>
+          </li>
+        </ul>
+      </div>
+
+
+     <div class='col-md-10'>
+      <h4><b>资产信息</b></h4>
+       <form  method="get" action="/property_details">
+        <tr>
+         <!--<ul class="nav nav-tabs nav-stacked">-->
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="团队" id="search_team"  name="search_team"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="域名" id="search_domain"  name="search_domain"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="IP地址" id="search_ip"  name="search_ip"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="备注" id="search_remark"  name="search_remark"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="应用" id="search_app"  name="search_app"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="系统" id="search_system"  name="search_system"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="xen的IP" id="search_xen"  name="search_xen_ip"  />
+         <input  class="form-control input" style="width:120px" type="text"  placeholder="xen的池名" id="search_xen_name"  name="search_xen_name"  />
+         <input  class="btn btn-primary btn-flat" type="submit" value="Search">
+         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal_update">批量更新</button>
+         <br>
+        </tr>
+
+        <!--<div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-2 main">-->
+        </form>
+          <div class="table-responsive">
+            <table id="property_table" class="table table-bordered">
+              <thead>
+                <tr>
+                  <th><nobr>序号</nobr></th>
+                  <th id="th_team"><nobr>团队</nobr></th>
+                  <th id="th_domain" onclick="rankdomain()"><nobr>域名</nobr></th>
+                  <th id="th_ip" onclick="rankip()"><nobr>IP</nobr></th>
+                  <th id="th_remark"><nobr>备注</nobr></th>
+                  <th id="th_app"><nobr>应用</nobr></th>
+                  <th id="th_system"><nobr>系统</nobr></th>
+                  <th id="th_cpu"><nobr>CPU(数)</nobr></th>
+                  <th id="th_mem"><nobr>内存(G)</nobr></th>
+                  <th id="th_disk"><nobr>硬盘(G)</nobr></th>
+                  <th id="th_model"><nobr>型号</nobr></th>
+                  <th id="th_principal"><nobr>负责人</nobr></th>
+                  <th id="th_xen_name" onclick="conceal_xen_name(12)"><nobr>xen名</nobr></th>
+                  <th id="th_room"><nobr>机房</nobr></th>
+                  <th id="th_xen_ip"><nobr>xen-IP</nobr></th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% for list in property_his %}
+                    <tr>
+                        <td width="40">
+                            <nobr>{{forloop.counter}}</nobr>
+                        </td>
+                        <td id="td_team"  width="80">
+                            <nobr>{{list.team_name}}</nobr>
+                        </td>
+                        <td id="td_domain" width="100">
+                            <nobr>{{list.domain_name}}</nobr>
+                        </td>
+                        <td id="td_ip"  width="105">
+                            <nobr>{{list.ip_name}}</nobr>
+                        </td>
+                        <td id="td_remark"  width="160">
+                            <nobr>{{list.ip_remark}}</nobr>
+                        </td>
+                        <td id="td_app" width="100">
+                            <nobr>{{list.app_name}}</nobr>
+                        </td>
+                        <td id="td_system" width="100">
+                            <nobr>{{list.system_name}}</nobr>
+                        </td>
+                        <td id="td_cpu"  width="60">
+                            <nobr>{{list.host_cpu}}</nobr>
+                        </td>
+                        <td id="td_mem"  width="60">
+                            <nobr>{{list.host_memory}}</nobr>
+                        </td>
+                        <td id="td_disk"  width="60">
+                            <nobr>{{list.host_disk}}</nobr>
+                        </td>
+                        <td id="td_model" width="100">
+                            <nobr>{{list.server_model}}</nobr>
+                        </td>
+                        <td id="td_pricipal"   width="60">
+                            <nobr>{{list.principal_name}}</nobr>
+                        </td>
+                        <!--<td id="td_xen_name" style="font-size:8px;" width="80">-->
+                        <td id="td_xen_name"  width="80">
+                            <nobr>{{list.xen_name}}</nobr>
+                        </td>
+                        <td id="td_room" width="60">
+                            <nobr>{{list.room_name}}</nobr>
+                        </td>
+                        <td id="td_xen_ip"  width="105">
+                            <nobr>{{list.xen_ip}}</nobr>
+                        </td>
+                        <td style="word-break:break-all" width="100">
+                           <nobr>
+                           <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal" onclick="ChangeContent(this)">更改</button>
+                           <button  type="button" class="btn btn-primary btn-xs" onclick="del(this)">删除</button>
+                           </nobr>
+                        </td>
+                    </tr>
+                {% endfor %}
+                        <!-- 模态框（Modal） -->
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        	<div class="modal-dialog">
+                        		<div class="modal-content">
+                        			<div class="modal-header">
+                        				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        				<h4 class="modal-title" id="myModalLabel">资料修改</h4>
+                        			</div>
+                        			<div class="modal-body">
+                                                               <label><br>服务器IP<br></label>
+                                                               <br>
+                                                               <input class="form-control input " style="width:560px" type="text" placeholder="172.30.200.11" id="ip_name" name="ip_name" />
+                                                               <br>
+                                                          <div id="team_name_div" name="team_name_div">
+                                                               <label><br>所属团队<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="OPS" id="team_name_html"  name="team_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="domain_name_div" name="domain_name_div">
+                                                               <label><br>项目域名<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="www.zhaopin.com" id="domain_name_html"  name="domain_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="ip_remark_div" name="ip_remark_div">
+                                                               <label><br>服务器备注<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="Xen虚拟机IP后面的名字" id="ip_remark_html"  name="ip_remark_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="app_name_div" name="app_name_div">
+                                                               <label><br>应用程序<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="tomcat" id="app_name_html"  name="app_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="system_name_div" name="system_name_div">
+                                                               <label><br>操作系统<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="Centos 7" id="system_name_html"  name="system_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                           <div id="cpu_name_div" name="cpu_name_div">
+                                                                <label><br>cpu核心数<br></label>
+                                                                <br>
+                                                                <input  class="form-control input " style="width:560px" type="text" placeholder="16" id="cpu_name_html"  name="cpu_name_html"/>
+                                                                <br>
+                                                           </div>
+                                                           <div id="memory_name_div" name="memory_name_div">
+                                                                <label><br>内存大小<br></label>
+                                                                <br>
+                                                                <input  class="form-control input " style="width:560px" type="text" placeholder="4" id="memory_name_html"  name="memory_name_html"/>
+                                                                <br>
+                                                           </div>
+                                                           <div id="disk_name_div" name="disk_name_div">
+                                                                <label><br>硬盘大小<br></label>
+                                                                <br>
+                                                                <input  class="form-control input " style="width:560px" type="text" placeholder="20" id="disk_name_html"  name="disk_name_html"/>
+                                                                <br>
+                                                           </div>
+                                                           <div id="model_name_div" name="model_name_div">
+                                                                <label><br>机器型号<br></label>
+                                                                <br>
+                                                                <input  class="form-control input " style="width:560px" type="text" placeholder="虚拟机" id="model_name_html"  name="model_name_html"/>
+                                                                <br>
+                                                           </div>
+                                                          <div id="principal_name_div" name="principal_name_div">
+                                                               <label><br>负责人<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="机器负责人" id="principal_name_html"  name="principal_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="xen_name_div" name="xen_name_div">
+                                                               <label><br>Xen池名<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="Test pool1 Bond 0+1 <6.5> (B28)" id="xen_name_html"  name="xen_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="room_name_div" name="room_name_div">
+                                                               <label><br>所属机房<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="B28" id="room_name_html"  name="room_name_html"/>
+                                                               <br>
+                                                          </div>
+                                                          <div id="xen_ip_div" name="xen_ip_div">
+                                                               <label><br>Xen的IP<br></label>
+                                                               <br>
+                                                               <input  class="form-control input " style="width:560px" type="text" placeholder="Xen宿主机的IP地址" id="xen_ip_html"  name="xen_ip_html"/>
+                                                               <br>
+                                                          </div>
+                                                         <br>
+                        			</div>
+                        			<div class="modal-footer">
+                        				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        				<button type="button" class="btn btn-primary" onclick="addData()">提交更改</button>
+                        			</div>
+                        		</div><!-- /.modal-content -->
+                        	</div><!-- /.modal -->
+                        </div>
+                        <!-- 模态框（Modal） -->
+                        <div class="modal fade" id="myModal_update" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                        <div class="modal-content">
+                                                <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel_update">资料修改</h4>
+                                                </div>
+                        			<div class="modal-body">
+                                                     <label>更改类型</label>
+                                                     <br>
+                                                     <div class="form-group ">
+                                                         <select class="form-control select" style="width:560px" id="project_name">
+                                                            <option value="team_list">团队列表更新</option>
+                                                            <option value="room_list">机房位置更新</option>
+                                                            <option value="domain_list">域名列表更新</option>
+                                                            <option value="app_list">应用列表更新</option>
+                                                            <option value="principal_list">负责人更新</option>
+                                                            <option value="system_list">系统名称更新</option>
+                                                         </select>
+                                                      </div>
+                                                     <div id="operation_name" name="operation_name">
+                                                          <label><br>更改名称<br></label>
+                                                          <br>
+                                                          <input  class="form-control input " style="width:560px" type="text" placeholder="更新的类型名称：与提交页面一样！ 注意：更改本页所有IP" id="all_name"  name="all_name"/>
+                                                          <br>
+                                                     </div>
+                                                     </div>
+                        			<div class="modal-footer">
+                        				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        				<button type="button" class="btn btn-primary" onclick="updateData()">提交更改</button>
+                        			</div>
+                        		</div><!-- /.modal-content -->
+                        	</div><!-- /.modal -->
+                        </div>
+              </tbody>
+            </table>
+            <p>
+            {% if property_his.has_previous %}
+              <a id="previous_page" href="?page={{ property_his.previous_page_number }}&search_team={{search_team_name}}&search_domain={{search_domain_name}}&search_ip={{search_ip_name}}&search_remark={{search_remark_name}}&search_app={{search_app_name}}&search_system={{search_system_name}}&search_xen_ip={{search_xen_ip}}&search_xen_name={{search_xen_name}}&rank_ip={{rank_ip}}&rank_domain={{rank_domain}}">Previous</a>
+              <!--<a href="?page={{ property_his.previous_page_number }}">Previous</a>-->
+              {% endif %}
+              {# property_his.paginator.number_pages 返回总页数 #}
+              Page {{ property_his.number }} of {{ property_his.paginator.num_pages }}.
+            {% if property_his.has_next %}
+              <a id="next_page" href="?page={{ property_his.next_page_number }}&search_team={{search_team_name}}&search_domain={{search_domain_name}}&search_ip={{search_ip_name}}&search_remark={{search_remark_name}}&search_app={{search_app_name}}&search_system={{search_system_name}}&search_xen_ip={{search_xen_ip}}&search_xen_name={{search_xen_name}}&rank_ip={{rank_ip}}&rank_domain={{rank_domain}}">Next</a>
+              <!--<a href="?page={{ property_his.next_page_number }}">Next</a>-->
+            {% endif %}
+              <a href="?page=all&&search_team={{search_team_name}}&search_domain={{search_domain_name}}&search_ip={{search_ip_name}}&search_remark={{search_remark_name}}&search_app={{search_app_name}}&search_system={{search_system_name}}&search_xen_ip={{search_xen_ip}}&search_xen_name={{search_xen_name}}&rank_ip={{rank_ip}}&rank_domain={{rank_domain}}">All</a>
+            <b> &nbsp 总数：{{property_number}} </b>
+            </p>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+   </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+   <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+   <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="static/bootstrap/js/jquery-1.8.3.min.js" charset="UTF-8"></script>
+   <!--<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>-->
+   <script type="text/javascript" src="static/bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+   <script type="text/javascript" src="static/bootstrap/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+  </body>
+  <style type="text/css">
+      .avb {
+          background-color: #C0C0C0;
+      }
+  </style>
+  <script>
+  function  conceal_xen_name(cell)
+  {
+          obj  =  document.getElementById("property_table");
+          //obj.style.display        =        "none";
+          //obj.rows[0].style.display  =  "none";        //隐藏第一行
+          for(i=0;i<obj.rows.length;i++)
+          {
+                          obj.rows[i].cells[cell].style.display  =  "none";
+          }
+  }
+  </script>
+  <script>
+      function rankip(){  
+          window.location.href = '/property_details?&search_team={{search_team_name}}&search_domain={{search_domain_name}}&search_ip={{search_ip_name}}&search_remark={{search_remark_name}}&search_app={{search_app_name}}&search_system={{search_system_name}}&search_xen_ip={{search_xen_ip}}&search_xen_name={{search_xen_name}}&rank_ip=rank_ip'
+      }
+      function rankdomain(){  
+          window.location.href = '/property_details?&search_team={{search_team_name}}&search_domain={{search_domain_name}}&search_ip={{search_ip_name}}&search_remark={{search_remark_name}}&search_app={{search_app_name}}&search_system={{search_system_name}}&search_xen_ip={{search_xen_ip}}&search_xen_name={{search_xen_name}}&rank_domain=rank_domain'
+      }
+  </script>
+  <script>
+      var temptr = $();
+      $(function(){
+          $("#property_table").on("click","tr",function(event){
+              temptr.removeClass("avb");
+              temptr = $(this);
+              temptr.addClass("avb")
+          });
+      });
+  </script>
+  <script>
+      if ('{{search_team_name}}')
+          $("#search_team").attr("value",'{{search_team_name}}');
+      if ('{{search_domain_name}}')
+          $("#search_domain").attr("value",'{{search_domain_name}}');
+      if ('{{search_ip_name}}')
+          $("#search_ip").attr("value",'{{search_ip_name}}');
+      if ('{{search_remark_name}}')
+          $("#search_remark").attr("value",'{{search_remark_name}}');
+      if ('{{search_app_name}}')
+          $("#search_app").attr("value",'{{search_app_name}}');
+      if ('{{search_domain_name}}')
+          $("#search_system").attr("value",'{{search_system_name}}');
+      if ('{{search_domain_name}}')
+          $("#search_xen").attr("value",'{{search_xen_ip}}');
+      if ('{{search_domain_name}}')
+          $("#search_xen_name").attr("value",'{{search_xen_name}}');
+  </script>
+   <script type="text/javascript">
+       function ChangeContent(args){  
+           var ip_name = $(args).parents().parents().find("td").eq(3).text()
+           $.ajax({
+               url: "/property_query",
+               type: "POST",
+               dataType: "json",
+               data: {
+                   "ip_name": ip_name,
+               },
+               success: function (data){
+                   console.log(data)
+                    $("#ip_name").attr("value",data["ip_name"]);
+                    $("#team_name_html").attr("value",data["team_name"]);
+                    $("#domain_name_html").attr("value",data["domain_name"]);
+                    $("#ip_remark_html").attr("value",data["ip_remark"]);
+                    $("#app_name_html").attr("value",data["app_name"]);
+                    $("#system_name_html").attr("value",data["system_name"]);
+                    $("#cpu_name_html").attr("value",data["host_cpu"]);
+                    $("#memory_name_html").attr("value",data["host_memory"]);
+                    $("#disk_name_html").attr("value",data["host_disk"]);
+                    $("#model_name_html").attr("value",data["server_model"]);
+                    $("#principal_name_html").attr("value",data["principal_name"]);
+                    $("#xen_name_html").attr("value",data["xen_name"]);
+                    $("#room_name_html").attr("value",data["room_name"]);
+                    $("#xen_ip_html").attr("value",data["xen_ip"]);
+                   //alert(data)
+                   //document.getElementById("xen_ip_html_test").innerHTML = data;
+               },
+           })
+       }
+   </script>
+   <script>
+   function del(args){
+       var ip_name = $(args).parents().parents().find("td").eq(3).text()
+       var msg = "你想删除这条纪录吗？\n\n请确认！"; 
+       if (confirm(msg)==true){ 
+           $.ajax({
+               url: "/property_delete",
+               type: "POST",
+               timeout : 0,
+               dataType: "json",
+               data: {
+                   "ip_name": ip_name,
+               },
+               success: function (data){
+                   console.log(data)
+                   if (data == 0) {
+                        window.location.reload();
+                        //window.location.href = '/property_details';
+                   }      
+               },
+               error: function(data){
+                   console.log(data)
+                   if (data != 0) {
+                        alert("删除失败");
+                   }
+               },
+           })
+       }
+       else{ 
+           window.location.href = '/property_details';
+       } 
+   }
+   </script>
+<script>
+    function updateData() {
+          var tableId = document.getElementById("property_table"); 
+          var ip_name = ""; 
+              for(var i=1;i<tableId.rows.length;i++) 
+              { 
+                  ip_name = ip_name+tableId.rows[i].cells[3].innerHTML
+              } 
+          var all_name  = $("#all_name").val()
+          var project_name = $("#project_name").val()
+          var update_operation = "update_operation"
+          if ( all_name == "" ){
+              alert("更改内容不能为空!!!");
+          }
+          else {
+              $.ajax({
+                  url: "/property_write",
+                  type: "POST",
+                  timeout: 300000,
+                  dataType: "json",
+                  data: {
+                      "ip_name": ip_name,
+                      "all_name": all_name,
+                      "project_name": project_name,
+                      "update_operation": update_operation,
+                  },
+                  success: function (data){
+                      console.log(data)
+                      if (data == 0) {
+                           window.location.reload();
+                      }      
+                  },
+                  error: function(data){
+                      console.log(data)
+                      if (data != 0) {
+                           alert("添加失败");
+                      }
+                  },
+                  })
+               }
+    }
+</script>
+  <script type="text/javascript">
+      function addData() {
+          var ip_name  = $("#ip_name").val()
+          var project_name  = "change_hosts"
+          var team_name_html = $("#team_name_html").val()
+          var domain_name_html = $("#domain_name_html").val()
+          var ip_remark_html = $("#ip_remark_html").val()
+          var app_name_html = $("#app_name_html").val()
+          var system_name_html = $("#system_name_html").val()
+          var cpu_name_html = $("#cpu_name_html").val()
+          var memory_name_html = $("#memory_name_html").val()
+          var disk_name_html = $("#disk_name_html").val()
+          var model_name_html = $("#model_name_html").val()
+          var principal_name_html = $("#principal_name_html").val()
+          var xen_name_html = $("#xen_name_html").val()
+          var room_name_html = $("#room_name_html").val()
+          var xen_ip_html = $("#xen_ip_html").val()
+          if ( ip_name == "" ){
+              alert("IP不能为空!!!");
+          }
+          else if ( team_name_html == "" ){
+              alert("团队不能为空!!!");
+          }
+          else if ( domain_name_html == "" ){
+              alert("域名不能为空!!!");
+          }
+          else if ( ip_remark_html == "" ){
+              alert("备注不能为空!!!");
+          }
+          else if ( app_name_html == "" ){
+              alert("应用不能为空!!!");
+          }
+          else if ( system_name_html == "" ){
+              alert("系统不能为空!!!");
+          }
+          else if ( cpu_name_html == "" ){
+              alert("cpu不能为空!!!");
+          }
+          else if ( memory_name_html == "" ){
+              alert("内存不能为空!!!");
+          }
+          else if ( disk_name_html == "" ){
+              alert("硬盘不能为空!!!");
+          }
+          else if ( model_name_html == "" ){
+              alert("型号不能为空!!!");
+          }
+          else if ( principal_name_html == "" ){
+              alert("负责人不能为空!!!");
+          }
+          else if ( xen_name_html == "" ){
+              alert("池名不能为空!!!");
+          }
+          else if ( room_name_html == "" ){
+              alert("机房不能为空!!!");
+          }
+          else if ( xen_ip_html == "" ){
+              alert("宿主机IP不能为空!!!");
+          }
+          else {
+              $.ajax({
+                  url: "/property_write",
+                  type: "POST",
+                  timeout : 300000,
+                  dataType: "json",
+                  data: {
+                      "ip_name": ip_name,
+                      "project_name": project_name,
+                      "team_name_html": team_name_html,
+                      "domain_name_html": domain_name_html,
+                      "ip_remark_html": ip_remark_html,
+                      "app_name_html": app_name_html,
+                      "system_name_html": system_name_html,
+                      "cpu_name_html": cpu_name_html,
+                      "memory_name_html": memory_name_html,
+                      "disk_name_html": disk_name_html,
+                      "model_name_html": model_name_html,
+                      "principal_name_html": principal_name_html,
+                      "xen_name_html": xen_name_html,
+                      "room_name_html": room_name_html,
+                      "xen_ip_html": xen_ip_html,
+                  },
+                  success: function (data){
+                      console.log(data)
+                      if (data == 0) {
+                           alert("更改成功");
+                           window.location.reload();
+                           //window.location.href = '/property_details';
+                      }      
+                  },
+                  error: function(data){
+                      console.log(data)
+                      if (data != 0) {
+                           alert("更改失败");
+                      }
+                  },
+                  })
+               }
+          }
+  </script>
+</html>

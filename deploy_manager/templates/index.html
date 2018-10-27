@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+    <title>智联管理系统</title>
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/ligh-broadside.css" rel="stylesheet">
+    <link href="http://v3.bootcss.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="static/bootstrap/css/jquery-ui.css">
+    <style type="text/css">
+        .select{
+            width: 15%;
+            height: 34px;
+            display: inline;
+        }
+        .input{
+            width: 30%;
+            height: 34px;
+            display: inline;
+        }
+        .text_area {
+            width: 30%;
+            height: 500px;
+        }
+        .td {
+            border-top: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">外网运维管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/chpasswd">更改密码</a></li>
+            <li><a href="/logout">退出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <br>
+   <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="width:280px" >
+        <!--<ul class="nav nav-list"> -->
+        <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+          <li class="active">
+              <a href="/index"><i class="glyphicon glyphicon-th-large"></i>外网运维管理系统</a>
+          </li>
+          <li><a href="#linuxSetting" class="nav-header collapsed" data-toggle="collapse">
+              <i class="glyphicon glyphicon-cog"></i>Linux部署
+              <span class="pull-right glyphicon glyphicon-chevron-down"></span></a>
+              <ul id="linuxSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                  <li><a href="/index" class="glyphicon glyphicon-fire">软件部署</a></li> 
+                  <li><a href="/deploy_details" class="glyphicon glyphicon-unchecked">部署历史</a></li>
+              </ul>
+          </li>
+        </ul> 
+      </div>
+
+    <div class='col-md-8'>
+      <h2>项目部署</h2>
+           <div class="col-sm-9 col-sm-offset-3 col-md-12 col-md-offset-1 main">
+            <div class="table-responsive">
+                <tr class="td">
+                      <label>部署项目</label>
+                      <br>
+                      <div class="form-group ">
+                          <select class="form-control select" style="width:800px" id="project_name" onclick="return click_a()">
+                             <option value="zabbix">Zabbix部署</option>
+                             <option value="logstash">Logstash部署</option>
+                             <option value="tomcat-7">Tomcat-7.0.69部署</option>
+                             <option value="tomcat-8">Tomcat-8.5.3部署</option>
+                             <option value="rabbitmq">Rabbitmq部署</option>
+                             <option value="redis">Redis部署</option>
+                          </select>
+                       </div>
+                </tr>
+                <tr >
+                      <label><br>业务名称<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="sousuo_top_tomcat" id="deploy_name"  name="deploy_name"/>
+                      <br>
+                </tr>
+                <tr >
+                      <label><br>服务器IP<br></label>
+                      <br>
+                      <textarea type="text" style="width:800px;height:80px;" placeholder="172.30.200.11" id="ip_name" name="ip_name" ></textarea>
+                      <br>
+                </tr>
+                <tr >
+                    <div id="logstash_path" name="logstash_path">
+                      <label><br>Log日志路径<br></label>
+                      <br>
+                      <input class="form-control input " style="width:800px" type="text" placeholder="/opt/tomcat/logs/catalina.out" id="logpath_name" name="logpath_name" />
+                      <br>
+                    </div>
+                </tr>
+                <tr >
+                    <div id="logstash_topic" name="logstash_topic">
+                      <label><br>topic名称<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="team-plat" id="topic_name"  name="topic_name"/>
+                      <br>
+                    </div>
+                </tr>
+                <tr >
+                 <div id="zabbix_process" name="zabbix_process">
+                      <label><br>监控进程<br></label>
+                      <br>
+                      <input  class="form-control input " style="width:800px" type="text" placeholder="tomcat" id="process_name"  name="process_name"/>
+                      <br>
+                 </div>
+                </tr>
+                <tr >
+                    <div id="zabbix_server" name="zabbix_server">
+                      <br>
+                      <label>Zabbix-Server地址</label>
+                      <br>
+                      <div class="form-group" >
+                          <select class="form-control select" style="width:800px" id="app_zabbix" name="app_zabbix">
+                             <option value="zbx_b.dev.zpidc.com,zbx.dev.zpidc.com">B端地址</option>
+                             <option value="zbx_p.dev.zpidc.com,zbx.dev.zpidc.com">平台地址</option>
+                             <option value="zbx_c.dev.zpidc.com,zbx.dev.zpidc.com">C端地址</option>
+                             <option value="zbx_s.dev.zpidc.com,zbx.dev.zpidc.com">搜索地址</option>
+                             <option value="zbx_za.dev.zpidc.com,zbx.dev.zpidc.com">ZA地址</option>
+                             <option value="zbx_dba.dev.zpidc.com,zbx.dev.zpidc.com">DBA地址</option>
+                          </select>
+                       </div>
+                     </div>
+                </tr>
+                <br>
+                <tr class="td">
+                    <td>
+                      <div class="box-footer select">
+                         <button type="button" class="btn btn-primary" onclick="addData()">部署</button>
+                      </div>
+                      <br>
+                      <br>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+    </div>
+    <div class='col-md-16'>
+      <h2>部署规则</h2>
+         <!--<ul class="nav nav-tabs nav-stacked">-->
+        <p>
+            看名字部署，你懂的！！！
+        </p>
+         <!--</ul>-->
+  </div>
+
+
+<script src="static/bootstrap/js/jquery-1.8.3.min.js"></script>
+      <!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+<!--<script type="text/JavaScript" src="./jquery.js"></script>
+</head><body>-->
+<script type="text/javascript">
+  document.getElementById('logstash_path').style.display = "none";
+  document.getElementById('logstash_topic').style.display = "none";
+  function click_a(){
+    var deploy=document.getElementById('project_name').value;
+    if(deploy == "zabbix")
+      {
+           document.getElementById('zabbix_process').style.display = "block";
+           document.getElementById('zabbix_server').style.display = "block";
+           document.getElementById('logstash_path').style.display = "none";
+           document.getElementById('logstash_topic').style.display = "none";
+      } 
+    else if (deploy == "logstash")
+      {
+           document.getElementById('logstash_topic').style.display = "block";
+           document.getElementById('logstash_path').style.display = "block";
+           document.getElementById('zabbix_process').style.display = "none";
+           document.getElementById('zabbix_server').style.display = "none";
+      }
+    else
+       {
+           document.getElementById('logstash_path').style.display = "none";
+           document.getElementById('logstash_topic').style.display = "none";
+           document.getElementById('zabbix_process').style.display = "none";
+           document.getElementById('zabbix_server').style.display = "none";
+    }
+   }
+</script>
+  <script type="text/javascript">
+      function addData() {
+          var ip_name  = $("#ip_name").val()
+          var deploy_name  = $("#deploy_name").val()
+          var app_zabbix  = $("#app_zabbix").val()
+          var process_name  = $("#process_name").val()
+          var project_name = $("#project_name").val()
+          var logpath_name = $("#logpath_name").val()
+          var logpath_topic = $("#logpath_topic").val()
+          if ( deploy_name == "" ){
+              alert("部署项目名不能为空!!!");
+          }
+          else if ( ip_name == "" ){
+              alert("服务器IP地址不能为空!!!");
+          }
+          else {
+              alert("已经在部署，历史查询即可!!!");
+              $.ajax({
+                  url: "/project_deploy_install",
+                  type: "POST",
+                  timeout : 300000,
+                  dataType: "json",
+                  data: {
+                      "ip_name": ip_name,
+                      "deploy_name": deploy_name,
+                      "app_zabbix": app_zabbix,
+                      "process_name": process_name,
+                      "project_name": project_name,
+                      "logpath_name": logpath_name,
+                      "logpath_topic": logpath_topic,
+                  },
+//                  success: function (data){
+//                      console.log(data)
+//                      if (data == 0) {
+//                           alert("部署成功");
+//                      }      
+//                  },
+//                  error: function(data){
+//                      console.log(data)
+//                      if (data != 0) {
+//                           alert("部署失败");
+//                      }
+//                  },
+                  })
+               }
+          }
+  </script>
+</html>
