@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/favicon.ico">
+    <title>外网运维管理系统</title>
+    <!-- Bootstrap -->
+    <link href="static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="static/bootstrap/css/ligh-broadside.css" rel="stylesheet">
+    <link href="http://v3.bootcss.com/examples/dashboard/dashboard.css" rel="stylesheet">
+    <script src="http://v3.bootcss.com/assets/js/ie-emulation-modes-warning.js"></script>
+   <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+    <link rel="stylesheet" href="static/bootstrap/css/jquery-ui.css">
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap-datetimepicker.min.css" media="screen"/>
+
+    <style type="text/css">
+        .select{
+            width: 15%;
+            height: 34px;
+            display: inline;
+        }
+        .input{
+            width: 30%;
+            height: 34px;
+            display: inline;
+        }
+        .text_area {
+            width: 30%;
+            height: 500px;
+        }
+        .td {
+            border-top: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/index">外网运维管理系统</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/chpasswd">更改密码</a></li>
+            <li><a href="/logout">退出</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+   <br>
+   <br>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="width:280px" >
+        <!--<ul class="nav nav-list"> -->
+        <ul id="main-nav" class="nav nav-tabs nav-stacked" style="">
+          <li class="active">
+              <a href="/index"><i class="glyphicon glyphicon-th-large"></i>外网运维管理系统</a>
+          </li>
+          <li><a href="#workSetting" class="nav-header collapsed" data-toggle="collapse">
+              <i class="glyphicon glyphicon-cog"></i>加班管理
+              <span class="pull-right glyphicon glyphicon-chevron-down"></span></a>
+              <ul id="workSetting" class="nav nav-list collapse secondmenu" style="height: 0px;">
+                  <li><a href="/work_add" class="glyphicon glyphicon-fire">加班管理</a></li>
+                  <li><a href="/work_details" class="glyphicon glyphicon-unchecked">加班查询</a></li>
+              </ul>
+          </li>
+        </ul> 
+      </div>
+
+    <div class='col-md-9'>
+      <h2>加班管理</h2>
+           <div class="col-sm-9 col-sm-offset-3 col-md-12 col-md-offset-1 main">
+            <div class="table-responsive">
+                <tr>
+                      <br>
+                    <td >
+                      <label>开始时间</label>
+                      <br>
+                          <input style="width:800px" class="form-control input" type="text"  id="start_time">
+                          <!--<select style="width:120px" class="form-control select" id="start_noon_time">
+                             <option value="forenoon_time">上午</option>
+                             <option value="afternoon_time">下午</option>
+                          </select>-->
+                    </td>
+                      <br>
+                </tr>
+                <tr>
+                      <br>
+                    <td >
+                      <label>结束时间</label>
+                      <br>
+                          <input style="width:800px" class="form-control input" type="text"  id="end_time">
+                          <!--<select style="width:120px" class="form-control select" id="end_noon_time">
+                             <option value="afternoon_time">下午</option>
+                             <option value="forenoon_time">上午</option>
+                          </select>-->
+                    </td>
+                      <br>
+                      <br>
+                </tr>
+                <tr>
+                      <label>类型</label>
+                      <br>
+                      <div class="form-group ">
+                          <select style="width:800px" class="form-control select" id="type_name" onclick="return click_a()">
+                             <option value="overtime">加班</option>
+                             <option value="resttime">调休</option>
+                          </select>
+                       </div>
+                </tr>
+                <tr >
+                    <div id="development_exist">
+                      <label><br>研发对接人<br></label>
+                      <br>
+                      <input  style="width:800px" class="form-control input " type="text" placeholder="是他，是他，就是他，大大的坏人，坏研发！！！" id="development_name"  name="development_name"/>
+                      <br>
+                    </div>
+                </tr>
+                <tr >
+                      <label><br>原因说明<br></label>
+                      <br>
+                      <textarea type="text" style="width:800px;height:80px;" placeholder="请说明原因！！！" id="reason_explain" name="reason_explain" ></textarea>
+                      <br>
+                </tr>
+                <br>
+                <tr class="td">
+                    <td>
+                      <div class="box-footer select">
+                         <button type="button" class="btn btn-primary" onclick="addData()">提交</button>
+                      </div>
+                      <br>
+                      <br>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+    </div>
+    <div class='col-md-16'>
+      <h2>填表规则</h2>
+        <p>
+            看名字填写，你懂的！！！
+        </p>
+  </div>
+  <script src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="static/bootstrap/js/jquery-1.8.3.min.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="static/bootstrap/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
+  <script type="text/javascript" src="static/bootstrap/js/locales/bootstrap-datetimepicker.fr.js" charset="UTF-8"></script>
+
+
+
+</body>
+<script type="text/javascript">
+  function click_a(){
+    var type=document.getElementById('type_name').value;
+    if(type == "resttime")
+    {
+           document.getElementById('development_exist').style.display = "none";
+    }
+    else
+    {
+           document.getElementById('development_exist').style.display = "block";
+    }
+   }
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#start_time').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            autoclose: true,
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#end_time').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii',
+            autoclose: true,
+        });
+    });
+</script>
+           <!-- format: 'yyyy-mm-dd hh:ii',-->
+
+<script type="text/javascript">
+      function addData() {
+          var start_time  = $("#start_time").val()
+          var end_time  = $("#end_time").val()
+          var type_name  = $("#type_name").val()
+          var development_name  = $("#development_name").val()
+          var reason_explain = $("#reason_explain").val()
+          var s_time = start_time.split(' ')[0];
+          var e_time = end_time.split(' ')[0];
+          if ( start_time == "" ){
+              alert("开始时间不能为空!!!");
+          }
+          else if ( end_time == "" ){
+              alert("结束时间不能为空!!!");
+          }
+          else if ( reason_explain == "" ){
+              alert("原因说明不能为空!!!");
+          }
+          else if ( start_time > end_time ){
+              alert("结束时间不能小于开始时间！！！");
+          }
+          else if ( s_time != e_time ){
+              alert("开始时间结束时间日期请填写同一天！！！");
+          }
+          else {
+              $.ajax({
+                  url: "/work_record_write",
+                  type: "POST",
+                  dataType: "json",
+                  data: {
+                      "start_time": start_time,
+                      "end_time": end_time,
+                      "type_name": type_name,
+                      "development_name": development_name,
+                      "reason_explain": reason_explain,
+                  },
+                  success: function (data){
+                      console.log(data)
+                      if (data == 0) {
+                           window.location.href = '/work_details';
+                      }      
+                  },
+                  error: function(data){
+                      console.log(data)
+                      if (data != 0) {
+                           alert("提交失败");
+                      }
+                  },
+                  })
+               }
+          }
+  </script>
+</html>
